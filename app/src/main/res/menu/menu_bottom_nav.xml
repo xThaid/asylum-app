@@ -2,18 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:id="@+id/navigation_energy"
+        android:icon="@drawable/ic_flash_on_black_24dp"
+        android:title="@string/title_energy" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:id="@+id/navigation_shutter"
+        android:icon="@drawable/ic_present_to_all_black_24dp"
+        android:title="@string/title_shutter" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:id="@+id/navigation_meteo"
+        android:icon="@drawable/ic_wb_sunny_black_24dp"
+        android:title="@string/title_meteo" />
+
+    <item
+        android:id="@+id/navigation_camera"
+        android:icon="@drawable/ic_videocam_black_24dp"
+        android:title="@string/title_camera" />
+
 
 </menu>

@@ -14,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
+import com.thaid.asylum.Blinds.BlindsAdapter;
+import com.thaid.asylum.Blinds.BlindsFragment;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
@@ -22,11 +25,13 @@ import com.thaid.asylum.api.requests.GetUserInfoRequest;
 
 public class MainActivity extends AppCompatActivity {
 
-    Fragment fragment1;
-    Fragment fragment2;
-    Fragment fragment3;
-    FragmentManager fm;
-    Fragment active;
+    private Fragment energyFragment;
+    private Fragment blindsFragment;
+    private Fragment meteoFragment;
+    private FragmentManager fragmentManager;
+    private Fragment activeFragment;
+    private View container;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -34,26 +39,27 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fm.beginTransaction().hide(active).show(fragment1).commit();
-                    active = fragment1;
+                case R.id.navigation_energy:
+                    fragmentManager.beginTransaction().hide(activeFragment).show(energyFragment).commit();
+                    activeFragment = energyFragment;
                     return true;
 
-                case R.id.navigation_dashboard:
-                    fm.beginTransaction().hide(active).show(fragment2).commit();
-                    active = fragment2;
+                case R.id.navigation_shutter:
+                    fragmentManager.beginTransaction().hide(activeFragment).show(blindsFragment).commit();
+                    activeFragment = blindsFragment;
                     return true;
 
-                case R.id.navigation_notifications:
-                    fm.beginTransaction().hide(active).show(fragment3).commit();
-                    active = fragment3;
+                case R.id.navigation_meteo:
+                    fragmentManager.beginTransaction().hide(activeFragment).show(meteoFragment).commit();
+                    activeFragment = meteoFragment;
+                    return true;
+
+                case R.id.navigation_camera:
                     return true;
             }
             return false;
         }
     };
-
-    View vieww;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,25 +67,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        vieww = findViewById(R.id.main_container_coordinator);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        fragment1 = new BlindsFragment();
-        fragment2 = new GateFragment();
-        fragment3 = new PowerFragment();
-        fm = getSupportFragmentManager();
-        active = fragment1;
+        container = findViewById(R.id.main_container_coordinator);
 
-        fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
-        fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
-        fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
+        energyFragment = new EnergyFragment();
+        blindsFragment = new BlindsFragment();
+        meteoFragment = new MeteoFragment();
+        activeFragment = energyFragment;
+
+        fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction().add(R.id.main_container, meteoFragment, "3").hide(meteoFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.main_container, blindsFragment, "2").hide(blindsFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.main_container,energyFragment, "1").commit();
+
+        APIClient.Initialize(this);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,21 +107,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else if(id == R.id.main_menu_action_refresh) {
-            final Context currContext = this;
-
-            APIClient apiClient = APIClient.getInstance(currContext);
+            APIClient apiClient = APIClient.getInstance();
             apiClient.sendRequest(new GetUserInfoRequest(), new ResponseListener<GetUserInfoRequest.GetUserInfoModel>() {
                 @Override
                 public void onSuccess(GetUserInfoRequest.GetUserInfoModel data) {
                     Snackbar snackbar = Snackbar
-                            .make(vieww, "Zalogowano jako " + data.getName(), Snackbar.LENGTH_LONG);
+                            .make(container, "Zalogowano jako " + data.getName(), Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
 
                 @Override
                 public void onError(APIError error) {
                     Snackbar snackbar = Snackbar
-                            .make(vieww, getString(error.getTranslationId()), Snackbar.LENGTH_LONG);
+                            .make(container, getString(error.getTranslationId()), Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             });

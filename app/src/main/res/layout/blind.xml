@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/blindName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/blind_name_0"
+        android:textColor="#353535"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="#F15B47"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_arrow_downward_black_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonStop"
+        app:layout_constraintTop_toTopOf="@+id/buttonStop" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#F15B47"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_stop_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/blindName" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="#F15B47"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_arrow_upward_black_24dp"
+        app:layout_constraintStart_toEndOf="@+id/buttonStop"
+        app:layout_constraintTop_toTopOf="@+id/buttonStop" />
+</android.support.constraint.ConstraintLayout>

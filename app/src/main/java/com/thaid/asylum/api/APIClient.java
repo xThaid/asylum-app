@@ -36,10 +36,11 @@ public class APIClient {
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public static synchronized APIClient getInstance(Context context) {
-        if (instance == null) {
-            instance = new APIClient(context.getApplicationContext());
-        }
+    public static synchronized void Initialize(Context context){
+        instance = new APIClient(context.getApplicationContext());
+    }
+
+    public static synchronized APIClient getInstance() {
         return instance;
     }
 
@@ -69,6 +70,8 @@ public class APIClient {
                         APIError apiError;
                         if(error.networkResponse == null) {
                             apiError = new APIError(APIError.NETWORK_ERROR, error.getMessage());
+                        } else if(error.networkResponse.statusCode == 400) {
+                            apiError = new APIError(APIError.BAD_REQUEST);
                         } else if(error.networkResponse.statusCode == 401) {
                             apiError = new APIError(APIError.AUTHORIZATION_FAILED);
                         } else {

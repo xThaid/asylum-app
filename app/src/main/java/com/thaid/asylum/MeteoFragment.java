@@ -6,15 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class GateFragment extends Fragment {
+public class MeteoFragment extends Fragment {
 
-    public GateFragment() {
+    public MeteoFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_gate, container, false);
+        return inflater.inflate(R.layout.fragment_meteo, container, false);
     }
 }
