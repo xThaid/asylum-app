@@ -1,6 +1,5 @@
 package com.thaid.asylum;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,9 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
-import com.thaid.asylum.Blinds.BlindsAdapter;
 import com.thaid.asylum.Blinds.BlindsFragment;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
@@ -77,17 +74,29 @@ public class MainActivity extends AppCompatActivity {
 
         container = findViewById(R.id.main_container_coordinator);
 
-        energyFragment = new EnergyFragment();
-        blindsFragment = new BlindsFragment();
-        meteoFragment = new MeteoFragment();
-        activeFragment = energyFragment;
-
         fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().add(R.id.main_container, meteoFragment, "3").hide(meteoFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.main_container, blindsFragment, "2").hide(blindsFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.main_container,energyFragment, "1").commit();
-
+        if (savedInstanceState != null) {
+            energyFragment = getSupportFragmentManager().getFragment(savedInstanceState, "energyFragment");
+            blindsFragment = getSupportFragmentManager().getFragment(savedInstanceState, "blindsFragment");
+            meteoFragment = getSupportFragmentManager().getFragment(savedInstanceState, "meteoFragment");
+            activeFragment = getSupportFragmentManager().getFragment(savedInstanceState, "activeFragment");
+        }
+        if(meteoFragment == null) {
+            meteoFragment = new MeteoFragment();
+            fragmentManager.beginTransaction().add(R.id.main_container, meteoFragment, "3").hide(meteoFragment).commit();
+        }
+        if(blindsFragment == null) {
+            blindsFragment = new BlindsFragment();
+            fragmentManager.beginTransaction().add(R.id.main_container, blindsFragment, "2").hide(blindsFragment).commit();
+        }
+        if(energyFragment == null) {
+            energyFragment = new EnergyFragment();
+            fragmentManager.beginTransaction().add(R.id.main_container, energyFragment, "1").commit();
+        }
+        if(activeFragment == null) {
+            activeFragment = energyFragment;
+        }
         APIClient.Initialize(this);
     }
 
@@ -128,5 +137,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getSupportFragmentManager().putFragment(outState, "energyFragment", energyFragment);
+        getSupportFragmentManager().putFragment(outState, "blindsFragment", blindsFragment);
+        getSupportFragmentManager().putFragment(outState, "meteoFragment", meteoFragment);
+        getSupportFragmentManager().putFragment(outState, "activeFragment", activeFragment);
     }
 }

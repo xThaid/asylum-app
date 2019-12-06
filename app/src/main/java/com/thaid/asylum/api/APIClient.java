@@ -71,9 +71,11 @@ public class APIClient {
                         if(error.networkResponse == null) {
                             apiError = new APIError(APIError.NETWORK_ERROR, error.getMessage());
                         } else if(error.networkResponse.statusCode == 400) {
-                            apiError = new APIError(APIError.BAD_REQUEST);
+                            apiError = new APIError(APIError.BAD_REQUEST, error.getMessage());
                         } else if(error.networkResponse.statusCode == 401) {
-                            apiError = new APIError(APIError.AUTHORIZATION_FAILED);
+                            apiError = new APIError(APIError.AUTHORIZATION_FAILED, error.getMessage());
+                        } else if(error.networkResponse.statusCode == 500) {
+                            apiError = new APIError(APIError.INTERNAL_SERVER_ERROR, error.getMessage());
                         } else {
                             apiError = new APIError(APIError.UNKNOWN_ERROR, error.getMessage());
                         }

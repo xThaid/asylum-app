@@ -4,12 +4,13 @@ import com.thaid.asylum.R;
 
 public class APIError {
 
-    public static final ErrorType NOT_CONNECTED        = new ErrorType(1, R.string.api_not_connected);
-    public static final ErrorType PARSE_ERROR          = new ErrorType(2, R.string.api_parse_error);
-    public static final ErrorType AUTHORIZATION_FAILED = new ErrorType(3, R.string.api_authorization_failed);
-    public static final ErrorType NETWORK_ERROR        = new ErrorType(4, R.string.api_network_error);
-    public static final ErrorType BAD_REQUEST          = new ErrorType(5, R.string.api_bad_request);
-    public static final ErrorType UNKNOWN_ERROR        = new ErrorType(6, R.string.api_unknown_eror);
+    public static final ErrorType NOT_CONNECTED           = new ErrorType(1, R.string.api_not_connected);
+    public static final ErrorType PARSE_ERROR             = new ErrorType(2, R.string.api_parse_error);
+    public static final ErrorType AUTHORIZATION_FAILED    = new ErrorType(3, R.string.api_authorization_failed);
+    public static final ErrorType NETWORK_ERROR           = new ErrorType(4, R.string.api_network_error);
+    public static final ErrorType BAD_REQUEST             = new ErrorType(5, R.string.api_bad_request);
+    public static final ErrorType UNKNOWN_ERROR           = new ErrorType(6, R.string.api_unknown_eror);
+    public static final ErrorType INTERNAL_SERVER_ERROR   = new ErrorType(7, R.string.api_internal_server_error);
 
     private final ErrorType type;
     private final String message;
@@ -33,6 +34,10 @@ public class APIError {
 
     public String getMessage() {
         return message;
+    }
+
+    public ErrorType getType() {
+        return type;
     }
 
     private static class ErrorType {

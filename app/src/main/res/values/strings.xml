@@ -21,6 +21,7 @@
     <string name="api_network_error">Błąd sieci</string>
     <string name="api_bad_request">Nieprawidłowe zapytanie</string>
     <string name="api_unknown_eror">Nieznany błąd</string>
+    <string name="api_internal_server_error">Błąd serwera</string>
 
     <string name="blind_all">Wszystkie rolety</string>
     <string name="blind_name_0">Mały pokój</string>
@@ -36,4 +37,13 @@
     <string name="action_name_0">Otwórz</string>
     <string name="action_name_1">Zamknij</string>
     <string name="action_name_2">Zatrzymaj</string>
+
+    <string name="production">Moc produkowana</string>
+    <string name="consumption">Moc zużywana</string>
+    <string name="use">Moc wykorzystywana</string>
+    <string name="import_">Moc pobierana</string>
+    <string name="export">Moc oddawana</string>
+    <string name="store">Moc magazynowana</string>
+
+
 </resources>
