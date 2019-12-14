@@ -1,4 +1,4 @@
-package com.thaid.asylum.api.requests;
+package com.thaid.asylum.api.requests.Blinds;
 
 import com.thaid.asylum.Blinds.BlindsFragment;
 import com.thaid.asylum.api.APINoDataOnResponseRequest;

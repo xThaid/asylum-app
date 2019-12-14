@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public abstract class APIRequest<T> {
 
     private final String APIEndpoint;
-    private final JSONObject data;
+    protected JSONObject data;
 
     public APIRequest(String APIEndpoint, JSONObject data) {
         this.APIEndpoint = APIEndpoint;

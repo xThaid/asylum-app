@@ -2,6 +2,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,38 +20,92 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/button7"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="#919090"
-                android:text="Historia"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="#C3A1D1"
+                android:text="@string/others"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/constraintLayout8" />
+                app:layout_constraintTop_toBottomOf="@+id/button4" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="#C3A1D1"
+                android:text="@string/from_beginning"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button4"
+                app:layout_constraintTop_toTopOf="@+id/button4" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="#C3A1D1"
+                android:text="@string/month"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button3"
+                app:layout_constraintTop_toTopOf="@+id/button3" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="#C3A1D1"
+                android:text="@string/year"
+                app:layout_constraintEnd_toStartOf="@+id/button6"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button3" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="#C3A1D1"
+                android:text="@string/day"
+                app:layout_constraintEnd_toStartOf="@+id/button5"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Moc chwilowa"
-                android:textSize="22sp"
+                android:text="@string/power_now"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout8"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/history"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
-
-            </android.support.constraint.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout9"
@@ -81,7 +136,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text="Pobieranie"
+                        android:text="@string/import_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +144,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value"
+                        android:id="@+id/card_value_import"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -108,10 +163,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value"
-                        app:layout_constraintTop_toTopOf="@+id/card_value" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_import"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_import" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -137,7 +192,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text="Magazynowanie"
+                        android:text="@string/stored_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -145,7 +200,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value1"
+                        android:id="@+id/card_value_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -164,10 +219,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value1"
-                        app:layout_constraintTop_toTopOf="@+id/card_value1" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_store"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_store" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -193,7 +248,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text="Oddawanie"
+                        android:text="@string/export_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -201,7 +256,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value2"
+                        android:id="@+id/card_value_export"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -220,10 +275,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value2"
-                        app:layout_constraintTop_toTopOf="@+id/card_value2" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_export"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_export" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -249,7 +304,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text='Produkcja'
+                        android:text="@string/production_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -257,7 +312,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value6"
+                        android:id="@+id/card_value_production"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -276,10 +331,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value6"
-                        app:layout_constraintTop_toTopOf="@+id/card_value6" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_production"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_production" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -305,7 +360,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text="Wykorzystanie"
+                        android:text="@string/used_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -313,7 +368,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value7"
+                        android:id="@+id/card_value_use"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -332,10 +387,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value7"
-                        app:layout_constraintTop_toTopOf="@+id/card_value7" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_use"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_use" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -360,7 +415,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
-                        android:text="Zużycie"
+                        android:text="@string/consumption_now"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -368,7 +423,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/card_value8"
+                        android:id="@+id/card_value_consumption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -387,10 +442,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="W"
+                        android:text="@string/power_unit"
                         android:textSize="22sp"
-                        app:layout_constraintStart_toEndOf="@+id/card_value8"
-                        app:layout_constraintTop_toTopOf="@+id/card_value8" />
+                        app:layout_constraintStart_toEndOf="@+id/card_value_consumption"
+                        app:layout_constraintTop_toTopOf="@+id/card_value_consumption" />
 
 
                 </android.support.constraint.ConstraintLayout>

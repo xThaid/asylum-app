@@ -1,11 +1,11 @@
-package com.thaid.asylum.api.requests;
+package com.thaid.asylum.api.requests.Energy;
 
 import com.thaid.asylum.api.APIRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GetCurrentPowerDataRequest extends APIRequest {
+public class GetCurrentPowerDataRequest extends APIRequest<GetCurrentPowerDataRequest.GetCurrentPowerDataModel> {
 
     private static final String API_ENDPOINT = "getCurrentPowerData";
 
@@ -13,7 +13,7 @@ public class GetCurrentPowerDataRequest extends APIRequest {
         super(API_ENDPOINT);
     }
     @Override
-    public Object parseResponse(JSONObject json) throws JSONException {
+    public GetCurrentPowerDataModel parseResponse(JSONObject json) throws JSONException {
         int production = json.getInt("production");
         int consumption = json.getInt("consumption");
         int use = json.getInt("use");

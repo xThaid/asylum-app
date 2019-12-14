@@ -8,16 +8,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
-import com.thaid.asylum.MainActivity;
 import com.thaid.asylum.R;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
-import com.thaid.asylum.api.requests.BlindActionRequest;
-import com.thaid.asylum.api.requests.BlindAllActionRequest;
+import com.thaid.asylum.api.requests.Blinds.BlindActionRequest;
+import com.thaid.asylum.api.requests.Blinds.BlindAllActionRequest;
 
 
 /**

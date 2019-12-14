@@ -44,6 +44,28 @@
     <string name="import_">Moc pobierana</string>
     <string name="export">Moc oddawana</string>
     <string name="store">Moc magazynowana</string>
+    <string name="history">Historia</string>
+    <string name="power_now">Moc chwilowa</string>
+    <string name="import_now">Pobieranie</string>
+    <string name="power_unit">W</string>
+    <string name="energy_unit">kWh</string>
+    <string name="stored_now">Magazynowanie</string>
+    <string name="export_now">Oddawanie</string>
+    <string name="production_now">Produkcja</string>
+    <string name="used_now">Wykorzystanie</string>
+    <string name="consumption_now">Zużycie</string>
+    <string name="energy_today">Energia dzisiaj</string>
+    <string name="others">Inne</string>
+    <string name="from_beginning">Od początku</string>
+    <string name="month">Obecny miesiąc</string>
+    <string name="year">Obecny rok</string>
+    <string name="day">Obecny dzień</string>
+    <string name="import_history">Pobrano</string>
+    <string name="stored_history">Zmagazynowano</string>
+    <string name="export_history">Oddano</string>
+    <string name="production_history">Wyprodukowano</string>
+    <string name="used_history">Wykorzystano</string>
+    <string name="consumption_history">Zużyto</string>
 
 
 </resources>

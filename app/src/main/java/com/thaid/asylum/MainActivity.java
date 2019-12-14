@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.thaid.asylum.Blinds.BlindsFragment;
+import com.thaid.asylum.Energy.EnergyFragment;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
@@ -39,19 +40,23 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_energy:
                     fragmentManager.beginTransaction().hide(activeFragment).show(energyFragment).commit();
                     activeFragment = energyFragment;
+                    ((EnergyFragment)energyFragment).startRequests();
                     return true;
 
                 case R.id.navigation_shutter:
                     fragmentManager.beginTransaction().hide(activeFragment).show(blindsFragment).commit();
                     activeFragment = blindsFragment;
+                    ((EnergyFragment)energyFragment).stopRequests();
                     return true;
 
                 case R.id.navigation_meteo:
                     fragmentManager.beginTransaction().hide(activeFragment).show(meteoFragment).commit();
                     activeFragment = meteoFragment;
+                    ((EnergyFragment)energyFragment).stopRequests();
                     return true;
 
                 case R.id.navigation_camera:
+                    ((EnergyFragment)energyFragment).stopRequests();
                     return true;
             }
             return false;
@@ -77,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState != null) {
-            energyFragment = getSupportFragmentManager().getFragment(savedInstanceState, "energyFragment");
-            blindsFragment = getSupportFragmentManager().getFragment(savedInstanceState, "blindsFragment");
-            meteoFragment = getSupportFragmentManager().getFragment(savedInstanceState, "meteoFragment");
-            activeFragment = getSupportFragmentManager().getFragment(savedInstanceState, "activeFragment");
+            energyFragment = fragmentManager.getFragment(savedInstanceState, "energyFragment");
+            blindsFragment = fragmentManager.getFragment(savedInstanceState, "blindsFragment");
+            meteoFragment = fragmentManager.getFragment(savedInstanceState, "meteoFragment");
+            activeFragment = fragmentManager.getFragment(savedInstanceState, "activeFragment");
         }
         if(meteoFragment == null) {
             meteoFragment = new MeteoFragment();
@@ -143,9 +148,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        getSupportFragmentManager().putFragment(outState, "energyFragment", energyFragment);
-        getSupportFragmentManager().putFragment(outState, "blindsFragment", blindsFragment);
-        getSupportFragmentManager().putFragment(outState, "meteoFragment", meteoFragment);
-        getSupportFragmentManager().putFragment(outState, "activeFragment", activeFragment);
+        fragmentManager.putFragment(outState, "energyFragment", energyFragment);
+        fragmentManager.putFragment(outState, "blindsFragment", blindsFragment);
+        fragmentManager.putFragment(outState, "meteoFragment", meteoFragment);
+        fragmentManager.putFragment(outState, "activeFragment", activeFragment);
+    }
+
+    public void setActiveFragment(Fragment fragment){
+        this.activeFragment = fragment;
     }
 }
