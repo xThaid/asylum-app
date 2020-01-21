@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import com.thaid.asylum.MainActivity;
@@ -25,6 +23,8 @@ import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
 import com.thaid.asylum.api.requests.Energy.GetCurrentPowerDataRequest;
 import com.thaid.asylum.api.requests.Energy.GetHistoryEnergyDataRequest;
+
+import org.joda.time.LocalDate;
 
 
 /**
@@ -112,33 +112,27 @@ public class EnergyFragment extends Fragment {
 
         dayHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openHistoryFragment(new Date(), new Date(), GetHistoryEnergyDataRequest.GROUP_SPAN_MINUTES);
+                openHistoryFragment(new LocalDate(), new LocalDate(), GetHistoryEnergyDataRequest.GROUP_SPAN_MINUTES);
             }
         });
 
         monthHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(new Date());
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                openHistoryFragment(cal.getTime(), new Date(), GetHistoryEnergyDataRequest.GROUP_SPAN_DAY);
+                LocalDate today = new LocalDate();
+                openHistoryFragment(today.withDayOfMonth(1), today, GetHistoryEnergyDataRequest.GROUP_SPAN_DAY);
             }
         });
 
         yearHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(new Date());
-                cal.set(Calendar.MONTH, 0);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                openHistoryFragment(cal.getTime(), new Date(), GetHistoryEnergyDataRequest.GROUP_SPAN_MONTH);
+                LocalDate today = new LocalDate();
+                openHistoryFragment(today.withMonthOfYear(1).withDayOfMonth(1), today, GetHistoryEnergyDataRequest.GROUP_SPAN_MONTH);
             }
         });
 
         allHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Format formatter = new SimpleDateFormat(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US);
-                openHistoryFragment(GetHistoryEnergyDataRequest.STARTING_DATE, new Date(), GetHistoryEnergyDataRequest.GROUP_SPAN_YEAR);
+                openHistoryFragment(GetHistoryEnergyDataRequest.STARTING_DATE, new LocalDate(), GetHistoryEnergyDataRequest.GROUP_SPAN_YEAR);
             }
         });
 
@@ -150,13 +144,6 @@ public class EnergyFragment extends Fragment {
 
         fragmentManager = getFragmentManager();
 
-        energyHistoryFragment = (EnergyHistoryFragment) fragmentManager.findFragmentByTag("5");
-
-        if(energyHistoryFragment == null) {
-            energyHistoryFragment = new EnergyHistoryFragment();
-            fragmentManager.beginTransaction().add(R.id.main_container, energyHistoryFragment, "5").hide(energyHistoryFragment).commit();
-        }
-
         thisFragment = this;
 
         handler = new Handler();
@@ -164,12 +151,13 @@ public class EnergyFragment extends Fragment {
         return rootView;
     }
 
+    public void setEnergyHistoryFragment(EnergyHistoryFragment energyHistoryFragment){
+        this.energyHistoryFragment = energyHistoryFragment;
+    }
     @Override
     public void onResume() {
-
         super.onResume();
         startRequests();
-
     }
 
     @Override
@@ -187,11 +175,11 @@ public class EnergyFragment extends Fragment {
             isRequestRunning = true;
         }
     }
-    private void openHistoryFragment(Date fromDate, Date toDate, String groupSpan){
-        energyHistoryFragment.setInitialState(fromDate, toDate, groupSpan);
-        fragmentManager.beginTransaction().hide(thisFragment).show(energyHistoryFragment).commit();
-        main.setActiveFragment(energyHistoryFragment);
-        stopRequests();
+    private void openHistoryFragment(LocalDate fromDate, LocalDate toDate, String groupSpan){
+            energyHistoryFragment.setInitialState(fromDate, toDate, groupSpan, true);
+            fragmentManager.beginTransaction().hide(thisFragment).show(energyHistoryFragment).commit();
+            main.setActiveFragment(energyHistoryFragment);
+            stopRequests();
     }
     private void openHistoryFragment(){
         fragmentManager.beginTransaction().hide(thisFragment).show(energyHistoryFragment).commit();

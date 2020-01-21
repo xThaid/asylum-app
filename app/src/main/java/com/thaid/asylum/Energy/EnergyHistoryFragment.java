@@ -4,8 +4,10 @@ import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +18,28 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.fatboyindustrial.gsonjodatime.Converters;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.thaid.asylum.Chart.ChartData;
+import com.thaid.asylum.Chart.ChartFragment;
+import com.thaid.asylum.MainActivity;
 import com.thaid.asylum.R;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
 import com.thaid.asylum.api.requests.Energy.GetHistoryEnergyDataRequest;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class EnergyHistoryFragment extends Fragment {
-
-    Date fromDate;
-    Date toDate;
 
     TextView productionTextView;
     TextView consumptionTextView;
@@ -46,11 +52,17 @@ public class EnergyHistoryFragment extends Fragment {
     Button dateFromButton;
     Button dateToButton;
     RadioGroup groupSpanRadioGroup;
-    DatePickerDialog.OnDateSetListener dateFromSetListener;
-    DatePickerDialog.OnDateSetListener dateToSetListener;
-    Format formatter;
-    Button loadDataButton;
 
+    Type chartDataType = new TypeToken<HashMap<String, ChartData>>(){}.getType();
+    Type energyTotalType = new TypeToken<HashMap<String, String>>(){}.getType();
+    HashMap<String, ChartData> chartData;
+    HashMap<String, String> energyTotal;
+    LocalDate fromDate;
+    LocalDate toDate;
+    String groupSpan = "";
+
+    boolean activeRequest;
+    ChartFragment chartFragment;
 
     public EnergyHistoryFragment() {
 
@@ -71,25 +83,34 @@ public class EnergyHistoryFragment extends Fragment {
         dateFromButton = rootView.findViewById(R.id.date_from_button);
         dateToButton = rootView.findViewById(R.id.date_to_button);
         groupSpanRadioGroup = rootView.findViewById(R.id.radioGroup);
-        loadDataButton = rootView.findViewById(R.id.button6);
+        Button loadDataButton = rootView.findViewById(R.id.button6);
 
-        fromDate = new Date();
-        toDate = new Date();
-        formatter = new SimpleDateFormat(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US);
+        Button chartProductionButton = rootView.findViewById(R.id.button9);
+        Button chartConsumptionButton = rootView.findViewById(R.id.button10);
+        Button chartImportButton = rootView.findViewById(R.id.button2);
+        Button chartExportButton = rootView.findViewById(R.id.button8);
+        Button chartStoreButton = rootView.findViewById(R.id.button12);
+        Button chartUseButton = rootView.findViewById(R.id.button);
 
-        dateFromSetListener = new DatePickerDialog.OnDateSetListener() {
+        activeRequest = false;
+
+        fromDate = new LocalDate();
+        toDate = new LocalDate();
+
+
+        final DatePickerDialog.OnDateSetListener dateFromSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 fromDate = dateSanitation(year, month, day);
-                dateFromButton.setText(formatter.format(fromDate));
+                dateFromButton.setText(fromDate.toString(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US));
             }
         };
 
-        dateToSetListener = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener dateToSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 toDate = dateSanitation(year, month, day);
-                dateToButton.setText(formatter.format(toDate));
+                dateToButton.setText(toDate.toString(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US));
             }
         };
 
@@ -107,18 +128,13 @@ public class EnergyHistoryFragment extends Fragment {
 
         loadDataButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int checkeddRadioId = groupSpanRadioGroup.getCheckedRadioButtonId();
+                int checkedRadioId = groupSpanRadioGroup.getCheckedRadioButtonId();
 
-                long timeDiff = toDate.getTime() - fromDate.getTime();
-                double millisecondsToDaysRatio = 24 * 60 * 60 * 1000;
-                double daysDiff = (timeDiff / millisecondsToDaysRatio) + 1;
+                if(checkedRadioId != -1 && fromDate.compareTo(toDate) <= 0){
 
-                if(checkeddRadioId != -1 && timeDiff >= 0){
-                    String groupSpan = "";
-
-                    switch (checkeddRadioId){
+                    switch (checkedRadioId){
                         case R.id.radioButton1:
-                            if(daysDiff < 2)
+                            if(Days.daysBetween(fromDate, toDate).getDays() < 2)
                                 groupSpan = GetHistoryEnergyDataRequest.GROUP_SPAN_MINUTES;
                             else{
                                 groupSpan = GetHistoryEnergyDataRequest.GROUP_SPAN_DAY;
@@ -140,46 +156,79 @@ public class EnergyHistoryFragment extends Fragment {
             }
         });
 
+        chartProductionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("production"));
+            }
+        });
+
+        chartConsumptionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("consumption"));
+            }
+        });
+
+        chartImportButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("import"));
+            }
+        });
+
+        chartExportButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("export"));
+            }
+        });
+
+        chartStoreButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("store"));
+            }
+        });
+
+        chartUseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openChartFragment(chartData.get("use"));
+            }
+        });
         return rootView;
     }
 
-    private Date dateSanitation(int year, int month, int day){
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day);
-        Date date = cal.getTime();
+    private LocalDate dateSanitation(int year, int month, int day){
+        LocalDate date = new LocalDate(year, month + 1, day);
+        LocalDate dateNow = new LocalDate();
 
         if(date.compareTo(GetHistoryEnergyDataRequest.STARTING_DATE) < 0){
             date = GetHistoryEnergyDataRequest.STARTING_DATE;
         }
 
-        if(date.compareTo(new Date()) > 0){
-            date = new Date();
+        if(date.compareTo(dateNow) > 0){
+            date = dateNow;
         }
 
         return date;
     }
 
-    private void openDateDialog(DatePickerDialog.OnDateSetListener onDateSetListener, Date startingDate){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startingDate);
+    private void openDateDialog(DatePickerDialog.OnDateSetListener onDateSetListener, LocalDate startingDate){
 
         DatePickerDialog dialog = new DatePickerDialog(
                 getContext(),
                 android.R.style.Theme_Holo_Light,
                 onDateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH));
+                startingDate.getYear(),
+                startingDate.getMonthOfYear()- 1,
+                startingDate.getDayOfMonth());
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable((Color.TRANSPARENT)));
         dialog.show();
     }
 
-    public void setInitialState(Date fromDate, Date toDate, String groupSpan){
+    public void setInitialState(LocalDate fromDate, LocalDate toDate, String groupSpan, boolean loadData){
         this.fromDate = fromDate;
         this.toDate = toDate;
-        dateFromButton.setText(formatter.format(fromDate));
-        dateToButton.setText(formatter.format(toDate));
+        this.groupSpan = groupSpan;
+        dateFromButton.setText(fromDate.toString(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US));
+        dateToButton.setText(toDate.toString(GetHistoryEnergyDataRequest.DATE_PATTERN, Locale.US));
 
         switch (groupSpan){
             case GetHistoryEnergyDataRequest.GROUP_SPAN_MINUTES:
@@ -195,44 +244,153 @@ public class EnergyHistoryFragment extends Fragment {
                 ((RadioButton)groupSpanRadioGroup.getChildAt(3)).setChecked(true);
                 break;
         }
-        loadData(fromDate, toDate, groupSpan);
+        if(loadData)
+            loadData(fromDate, toDate, groupSpan);
     }
 
-    private void loadData(Date fromDate, Date toDate, String groupSpan){
-        GetHistoryEnergyDataRequest request;
-        loadingView.setVisibility(View.VISIBLE);
-        try {
-            request = new GetHistoryEnergyDataRequest(fromDate, toDate, groupSpan);
+    private void loadData(final LocalDate fromDate, final LocalDate toDate, final String groupSpan){
+        if(!activeRequest) {
+            GetHistoryEnergyDataRequest request;
+            loadingView.setVisibility(View.VISIBLE);
+            activeRequest = true;
+            try {
+                request = new GetHistoryEnergyDataRequest(fromDate, toDate, groupSpan);
 
-            APIClient apiClient = APIClient.getInstance();
-            apiClient.sendRequest(request,
-                    new ResponseListener<GetHistoryEnergyDataRequest.HistoryEnergyDataModel>() {
-                        @Override
-                        public void onSuccess(GetHistoryEnergyDataRequest.HistoryEnergyDataModel data) {
-                            productionTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getProduction()));
-                            consumptionTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getConsumption()));
-                            importTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getImport_()));
-                            exportTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getExport()));
-                            storeTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getStore()));
-                            useTextView.setText(String.format(Locale.US, "%.2f", data.getTotalEnergy().getUse()));
-                            loadingView.setVisibility(View.INVISIBLE);
-                        }
+                APIClient apiClient = APIClient.getInstance();
+                apiClient.sendRequest(request,
+                        new ResponseListener<GetHistoryEnergyDataRequest.HistoryEnergyDataModel>() {
+                            @Override
+                            public void onSuccess(GetHistoryEnergyDataRequest.HistoryEnergyDataModel data) {
+                                String production = String.format(Locale.US, "%.2f", data.getTotalEnergy().getProduction());
+                                String consumption = String.format(Locale.US, "%.2f", data.getTotalEnergy().getConsumption());
+                                String import_ = String.format(Locale.US, "%.2f", data.getTotalEnergy().getImport_());
+                                String export = String.format(Locale.US, "%.2f", data.getTotalEnergy().getExport());
+                                String store = String.format(Locale.US, "%.2f", data.getTotalEnergy().getStore());
+                                String use = String.format(Locale.US, "%.2f", data.getTotalEnergy().getUse());
 
-                        @Override
-                        public void onError(APIError error) {
-                            if (error.getType() != APIError.INTERNAL_SERVER_ERROR && isAdded()) {
-                                Snackbar snackbar = Snackbar
-                                        .make(rootView, getString(error.getTranslationId()) + " " + error.getMessage(), Snackbar.LENGTH_LONG);
-                                snackbar.show();
+                                productionTextView.setText(production);
+                                consumptionTextView.setText(consumption);
+                                importTextView.setText(import_);
+                                exportTextView.setText(export);
+                                storeTextView.setText(store);
+                                useTextView.setText(use);
+
+                                energyTotal.put("production", production);
+                                energyTotal.put("consumption", consumption);
+                                energyTotal.put("import", import_);
+                                energyTotal.put("export", export);
+                                energyTotal.put("store", store);
+                                energyTotal.put("use", use);
+
+                                chartData.put("production", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getProduction(), "Produkcja", Color.parseColor("#78C878")));
+                                chartData.put("consumption", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getConsumption(), "Zużycie", Color.parseColor("#FF5050")));
+                                chartData.put("import", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getImport_(), "Pobieranie", Color.parseColor("#C88C14")));
+                                chartData.put("export", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getExport(), "Oddawanie", Color.parseColor("#8C8C14")));
+                                chartData.put("store", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getStore(), "Magazynowanie", Color.parseColor("#8C3C8C")));
+                                chartData.put("use", new ChartData(fromDate, toDate, groupSpan, data.getGroups().getUse(), "Wykorzystanie", Color.parseColor("#DC8C00")));
+
                                 loadingView.setVisibility(View.INVISIBLE);
+                                activeRequest = false;
                             }
-                        }
-                    });
-        } catch (JSONException e) {
-            Snackbar snackbar = Snackbar
-                    .make(rootView, "Wystąpił błąd podczas tworzenia zapytania", Snackbar.LENGTH_LONG);
-            snackbar.show();
-            loadingView.setVisibility(View.INVISIBLE);
+
+                            @Override
+                            public void onError(APIError error) {
+                                if (error.getType() != APIError.INTERNAL_SERVER_ERROR && isAdded()) {
+                                    Snackbar snackbar = Snackbar
+                                            .make(rootView, getString(error.getTranslationId()) + " " + error.getMessage(), Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                    loadingView.setVisibility(View.INVISIBLE);
+                                    activeRequest = false;
+                                }
+                            }
+                        });
+            } catch (JSONException e) {
+                Snackbar snackbar = Snackbar
+                        .make(rootView, "Wystąpił błąd podczas tworzenia zapytania", Snackbar.LENGTH_LONG);
+                snackbar.show();
+                loadingView.setVisibility(View.INVISIBLE);
+                activeRequest = false;
+            }
         }
+    }
+    private void openChartFragment(ChartData chartData){
+        if(chartData != null) {
+            chartFragment.drawChart(chartData, this);
+            getFragmentManager().beginTransaction().hide(this).show(chartFragment).commit();
+            ((MainActivity) getActivity()).setActiveFragment(chartFragment);
+        }
+    }
+
+
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        FragmentManager fragmentManager = getFragmentManager();
+
+        if(savedInstanceState != null) {
+            if(fragmentManager !=null) {
+                chartFragment = (ChartFragment) fragmentManager.getFragment(savedInstanceState, "chartFragment");
+            }
+
+            Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
+
+            String json= savedInstanceState.getString("chart_data_hash_map");
+            if(json != null && !json.isEmpty()) {
+                chartData = gson.fromJson(json, chartDataType);
+            }
+
+            json= savedInstanceState.getString("energy_total_hash_map");
+            if(json != null && !json.isEmpty()) {
+                energyTotal = gson.fromJson(json, energyTotalType);
+                productionTextView.setText(energyTotal.get("production"));
+                consumptionTextView.setText(energyTotal.get("consumption"));
+                importTextView.setText(energyTotal.get("import"));
+                exportTextView.setText(energyTotal.get("export"));
+                storeTextView.setText(energyTotal.get("store"));
+                useTextView.setText(energyTotal.get("use"));
+            }
+
+            String jsonFromDate= savedInstanceState.getString("from_date");
+            String jsonToDate = savedInstanceState.getString("to_date");
+            String groupSpan = savedInstanceState.getString("group_span");
+            if(jsonFromDate != null &&
+                    !jsonFromDate.isEmpty() &&
+                    jsonToDate != null &&
+                    !jsonToDate.isEmpty() &&
+                    groupSpan != null &&
+                    !groupSpan.isEmpty()) {
+
+                setInitialState(gson.fromJson(jsonFromDate, LocalDate.class),
+                        gson.fromJson(jsonToDate, LocalDate.class),
+                        groupSpan,
+                        false);
+            }
+        }
+        if(chartFragment == null && fragmentManager != null){
+            chartFragment = new ChartFragment();
+            fragmentManager.beginTransaction().add(R.id.main_container, chartFragment, "4").hide(chartFragment).commit();
+        }
+
+        if(chartData == null){
+            chartData = new HashMap<>();
+        }
+        if(energyTotal == null){
+            energyTotal = new HashMap<>();
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
+
+        outState.putString("chart_data_hash_map", gson.toJson(chartData, chartDataType));
+        outState.putString("energy_total_hash_map", gson.toJson(energyTotal, energyTotalType));
+        outState.putString("from_date", gson.toJson(fromDate));
+        outState.putString("to_date", gson.toJson(toDate));
+        outState.putString("group_span", groupSpan);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        if(fragmentManager != null && chartFragment != null)
+            fragmentManager.putFragment(outState, "chartFragment", chartFragment);
     }
 }

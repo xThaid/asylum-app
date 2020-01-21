@@ -2,14 +2,11 @@ package com.thaid.asylum.api.requests.Energy;
 
 import com.thaid.asylum.api.APIRequest;
 
+import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class GetHistoryEnergyDataRequest extends APIRequest<GetHistoryEnergyDataRequest.HistoryEnergyDataModel> {
@@ -37,21 +34,14 @@ public class GetHistoryEnergyDataRequest extends APIRequest<GetHistoryEnergyData
     public static final String GROUP_SPAN_DAY = "day";
     public static final String GROUP_SPAN_MINUTES = "minutes";
 
-    public static final Date STARTING_DATE;
-
-    static {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2018,5,21);
-        STARTING_DATE = cal.getTime();
-    }
+    public static final LocalDate STARTING_DATE = new LocalDate(2018, 5, 21);
 
 
-    public GetHistoryEnergyDataRequest(Date fromDate, Date toDate, String groupSpan) throws JSONException{
+    public GetHistoryEnergyDataRequest(LocalDate fromDate, LocalDate toDate, String groupSpan) throws JSONException{
         super(API_ENDPOINT);
         JSONObject postData = new JSONObject();
-        Format formatter = new SimpleDateFormat(DATE_PATTERN, Locale.US);
-        postData.put(FROM_DATE, formatter.format(fromDate));
-        postData.put(TO_DATE, formatter.format(toDate));
+        postData.put(FROM_DATE, fromDate.toString(DATE_PATTERN, Locale.US));
+        postData.put(TO_DATE, toDate.toString(DATE_PATTERN, Locale.US));
         postData.put(GROUP_SPAN, groupSpan);
         this.data = postData;
     }

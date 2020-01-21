@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.thaid.asylum.Blinds.BlindsFragment;
+import com.thaid.asylum.Chart.ChartFragment;
 import com.thaid.asylum.Energy.EnergyFragment;
+import com.thaid.asylum.Energy.EnergyHistoryFragment;
 import com.thaid.asylum.api.APIClient;
 import com.thaid.asylum.api.APIError;
 import com.thaid.asylum.api.ResponseListener;
@@ -23,9 +25,10 @@ import com.thaid.asylum.api.requests.GetUserInfoRequest;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Fragment energyFragment;
+    private EnergyFragment energyFragment;
     private Fragment blindsFragment;
     private Fragment meteoFragment;
+    private EnergyHistoryFragment energyHistoryFragment;
     private FragmentManager fragmentManager;
     private Fragment activeFragment;
     private View container;
@@ -40,23 +43,23 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_energy:
                     fragmentManager.beginTransaction().hide(activeFragment).show(energyFragment).commit();
                     activeFragment = energyFragment;
-                    ((EnergyFragment)energyFragment).startRequests();
+                    energyFragment.startRequests();
                     return true;
 
                 case R.id.navigation_shutter:
                     fragmentManager.beginTransaction().hide(activeFragment).show(blindsFragment).commit();
                     activeFragment = blindsFragment;
-                    ((EnergyFragment)energyFragment).stopRequests();
+                    energyFragment.stopRequests();
                     return true;
 
                 case R.id.navigation_meteo:
                     fragmentManager.beginTransaction().hide(activeFragment).show(meteoFragment).commit();
                     activeFragment = meteoFragment;
-                    ((EnergyFragment)energyFragment).stopRequests();
+                    energyFragment.stopRequests();
                     return true;
 
                 case R.id.navigation_camera:
-                    ((EnergyFragment)energyFragment).stopRequests();
+                    energyFragment.stopRequests();
                     return true;
             }
             return false;
@@ -82,10 +85,17 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState != null) {
-            energyFragment = fragmentManager.getFragment(savedInstanceState, "energyFragment");
+            energyFragment = (EnergyFragment) fragmentManager.getFragment(savedInstanceState, "energyFragment");
             blindsFragment = fragmentManager.getFragment(savedInstanceState, "blindsFragment");
             meteoFragment = fragmentManager.getFragment(savedInstanceState, "meteoFragment");
             activeFragment = fragmentManager.getFragment(savedInstanceState, "activeFragment");
+            energyHistoryFragment = (EnergyHistoryFragment) fragmentManager.getFragment(savedInstanceState, "energyHistoryFragment");
+        }
+
+
+        if(energyHistoryFragment == null){
+            energyHistoryFragment = new EnergyHistoryFragment();
+            fragmentManager.beginTransaction().add(R.id.main_container, energyHistoryFragment, "4").hide(energyHistoryFragment).commit();
         }
         if(meteoFragment == null) {
             meteoFragment = new MeteoFragment();
@@ -102,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         if(activeFragment == null) {
             activeFragment = energyFragment;
         }
+        energyFragment.setEnergyHistoryFragment(energyHistoryFragment);
+
         APIClient.Initialize(this);
     }
 
@@ -152,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.putFragment(outState, "blindsFragment", blindsFragment);
         fragmentManager.putFragment(outState, "meteoFragment", meteoFragment);
         fragmentManager.putFragment(outState, "activeFragment", activeFragment);
+        fragmentManager.putFragment(outState, "energyHistoryFragment", energyHistoryFragment);
     }
 
     public void setActiveFragment(Fragment fragment){

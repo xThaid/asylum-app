@@ -34,18 +34,60 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/button6" />
 
-            <Button
-                android:id="@+id/button6"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout8"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="2dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="#C3A1D1"
-                android:text="Wyświetl"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/titleTextView"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout7"
+                app:layout_constraintTop_toBottomOf="@+id/titleTextView">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="131dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/radioButton1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Brak grupowania"
+                        android:textSize="17sp"
+                        android:textStyle="normal" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Grupuj po dniu"
+                        android:textSize="17sp"
+                        android:textStyle="normal" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Grupuj po miesiącu"
+                        android:textSize="17sp"
+                        android:textStyle="normal" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Grupuj po roku"
+                        android:textSize="17sp"
+                        android:textStyle="normal" />
+                </RadioGroup>
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout9"
@@ -392,6 +434,19 @@
 
             </android.support.constraint.ConstraintLayout>
 
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="#C3A1D1"
+                android:text="Wyświetl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/titleTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout7"
                 android:layout_width="0dp"
@@ -462,58 +517,103 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout8"
                 android:layout_width="0dp"
-                android:layout_height="160dp"
-                android:layout_marginStart="2dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout7"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextView">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
 
-                <RadioGroup
-                    android:id="@+id/radioGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="131dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <TextView
+                    android:id="@+id/titleTextView2"
+                    android:layout_width="395dp"
+                    android:layout_height="wrap_content"
+                    android:text="Wykresy"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <RadioButton
-                        android:id="@+id/radioButton1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Brak grupowania"
-                        android:textSize="17sp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:background="#C3A1D1"
+                    android:text="Oddawanie"
+                    app:layout_constraintBottom_toBottomOf="@+id/button2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/button2"
+                    app:layout_constraintTop_toTopOf="@+id/button2" />
 
-                    <RadioButton
-                        android:id="@+id/radioButton2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Grupuj po dniu"
-                        android:textSize="17sp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#C3A1D1"
+                    android:text="Wykorzystanie"
+                    app:layout_constraintEnd_toStartOf="@+id/button12"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/button10"
+                    app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-                    <RadioButton
-                        android:id="@+id/radioButton3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Grupuj po miesiącu"
-                        android:textSize="17sp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#C3A1D1"
+                    android:text="Pobieranie"
+                    app:layout_constraintEnd_toStartOf="@+id/button8"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/button9"
+                    app:layout_constraintTop_toBottomOf="@+id/titleTextView2" />
 
-                    <RadioButton
-                        android:id="@+id/radioButton4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Grupuj po roku"
-                        android:textSize="17sp"
-                        android:textStyle="normal" />
-                </RadioGroup>
+                <Button
+                    android:id="@+id/button9"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:background="#C3A1D1"
+                    android:text="Produkcja"
+                    app:layout_constraintBottom_toBottomOf="@+id/button2"
+                    app:layout_constraintEnd_toStartOf="@+id/button2"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/button2" />
+
+                <Button
+                    android:id="@+id/button10"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:background="#C3A1D1"
+                    android:text="Zużycie"
+                    app:layout_constraintBottom_toBottomOf="@+id/button"
+                    app:layout_constraintEnd_toStartOf="@+id/button"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/button" />
+
+                <Button
+                    android:id="@+id/button12"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:background="#C3A1D1"
+                    android:text="Magazyn"
+                    app:layout_constraintBottom_toBottomOf="@+id/button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/button"
+                    app:layout_constraintTop_toTopOf="@+id/button" />
+
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
